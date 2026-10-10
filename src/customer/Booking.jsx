@@ -8,10 +8,15 @@ export default function Booking({
   onBack,
   currentUser,
   onAuthSuccess,
+  checkIn: initialCheckIn,
+  checkOut: initialCheckOut,
+  guests: initialGuests,
 }) {
-  const [checkIn, setCheckIn] = useState("");
-  const [checkOut, setCheckOut] = useState("");
-  const [guests, setGuests] = useState("2");
+
+const [checkIn, setCheckIn] = useState(initialCheckIn || "");
+const [checkOut, setCheckOut] = useState(initialCheckOut || "");
+const [guests, setGuests] = useState(String(initialGuests ?? 2));
+
 
   const [customer, setCustomer] = useState({
     name: "",

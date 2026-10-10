@@ -405,20 +405,7 @@ function SearchResults({
   ]);
 
   return (
-    <div className="old-search-results-page">
-      {/* ================= HEADER ================= */}
-      <header className="old-results-header">
-        <div className="old-results-logo">
-          STAYORA
-        </div>
-
-        <nav className="old-results-nav">
-          <span>Trang chủ</span>
-          <span>Khám phá</span>
-          <span>Đặt phòng của tôi</span>
-          <span>♡ Yêu thích</span>
-        </nav>
-      </header>
+  <div className="old-search-results-page">
 
       {/* ================= SEARCH BAR ================= */}
       <div className="old-search-bar">
@@ -461,13 +448,20 @@ function SearchResults({
             <strong>{guests || "2 khách"}</strong>
           </div>
         </div>
-
-        <button
-          type="button"
-          className="old-search-button"
-        >
-          Tìm phòng
-        </button>
+         <button
+  type="button"
+  className="old-search-button"
+  onClick={() => {
+    document
+      .querySelector(".old-results-container")
+      ?.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+  }}
+>
+  Tìm phòng
+</button>       
       </div>
 
       {/* ================= TITLE ================= */}
@@ -742,36 +736,6 @@ function SearchResults({
           color: #171717;
           font-family: Arial, Helvetica, sans-serif;
         }
-
-        .old-results-header {
-          height: 72px;
-          background: #ffffff;
-          border-bottom: 1px solid #e9e6df;
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          padding: 0 68px;
-          box-sizing: border-box;
-        }
-
-        .old-results-logo {
-          font-size: 27px;
-          font-weight: 800;
-          letter-spacing: 4px;
-        }
-
-        .old-results-nav {
-          display: flex;
-          align-items: center;
-          gap: 32px;
-          font-size: 14px;
-          color: #262626;
-        }
-
-        .old-results-nav span {
-          cursor: pointer;
-        }
-
         .old-search-bar {
           width: calc(100% - 136px);
           max-width: 990px;

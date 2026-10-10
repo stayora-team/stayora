@@ -1,190 +1,95 @@
+
 import React from "react";
 import "../MyBookings.css";
 
 function MyBookings({ onBack, currentUser }) {
-  // =========================
-  // LẤY BOOKING
-  // =========================
-
+  // LẤY DANH SÁCH ĐẶT PHÒNG
   let allBookings = [];
 
   try {
-    const savedBookings = localStorage.getItem(
-      "stayoraBookings"
-    );
+    const savedBookings = localStorage.getItem("stayoraBookings");
 
-    allBookings = savedBookings
-      ? JSON.parse(savedBookings)
-      : [];
+    allBookings = savedBookings ? JSON.parse(savedBookings) : [];
 
     if (!Array.isArray(allBookings)) {
       allBookings = [];
     }
   } catch (error) {
-    console.error(
-      "Không thể đọc danh sách đặt phòng:",
-      error
-    );
-
+    console.error("Không thể đọc danh sách đặt phòng:", error);
     allBookings = [];
   }
 
-  // =========================
-  // CHỈ LẤY BOOKING CỦA USER HIỆN TẠI
-  // =========================
-
+  // CHỈ HIỂN THỊ ĐẶT PHÒNG CỦA NGƯỜI DÙNG HIỆN TẠI
   const bookings = currentUser?.id
     ? allBookings.filter(
         (booking) =>
-          String(booking.userId) ===
-          String(currentUser.id)
+          String(booking.userId) === String(currentUser.id)
       )
     : [];
 
-  // =========================
-  // FORMAT GIÁ
-  // =========================
-
+  // ĐỊNH DẠNG GIÁ
   function formatPrice(price) {
-    return (
-      Number(price || 0).toLocaleString("vi-VN") +
-      "đ"
-    );
+    return Number(price || 0).toLocaleString("vi-VN") + "đ";
   }
 
-  // =========================
-  // FORMAT NGÀY
-  // =========================
-
+  // ĐỊNH DẠNG NGÀY
   function formatDate(date) {
     if (!date) return "Chưa có";
 
-    return new Date(
-      date + "T00:00:00"
-    ).toLocaleDateString("vi-VN");
-  }
+    const parsedDate = new Date(date + "T00:00:00");
 
-  // =========================
-  // RENDER
-  // =========================
+    if (Number.isNaN(parsedDate.getTime())) {
+      return "Chưa có";
+    }
+
+    return parsedDate.toLocaleDateString("vi-VN");
+  }
 
   return (
     <div className="my-bookings-page">
-
-      {/* =========================
-          HEADER
-      ========================= */}
-
-      <header className="search-header">
-
-        <div className="search-logo">
-          ✦ STAYORA
-        </div>
-
-        <nav>
-          <span>Trang chủ</span>
-          <span>Khám phá</span>
-          <span>Đặt phòng của tôi</span>
-          <span>♡ Yêu thích</span>
-        </nav>
-
-        <div className="header-actions">
-
-          {currentUser ? (
-            <span>
-              Xin chào,{" "}
-              <strong>
-                {currentUser.fullName}
-              </strong>
-            </span>
-          ) : (
-            <>
-              <button>Đăng nhập</button>
-              <button>Đăng ký</button>
-            </>
-          )}
-
-        </div>
-
-      </header>
-
-      {/* =========================
-          MAIN
-      ========================= */}
-
       <main className="my-bookings-container">
-
         <button
+          type="button"
           className="booking-back-button"
           onClick={onBack}
         >
           ← Quay lại
         </button>
 
-        {/* =========================
-            TITLE
-        ========================= */}
-
         <div className="my-bookings-title">
+          <p className="eyebrow">STAYORA · ĐÀ LẠT</p>
 
-          <p className="eyebrow">
-            STAYORA · ĐÀ LẠT
-          </p>
-
-          <h1>
-            Đặt phòng của tôi
-          </h1>
+          <h1>Đặt phòng của tôi</h1>
 
           <p>
-            Quản lý và xem lại những đặt phòng
-            của bạn.
+            Quản lý và xem lại những đặt phòng của bạn.
           </p>
-
         </div>
 
-        {/* =========================
-            EMPTY
-        ========================= */}
-
         {bookings.length === 0 ? (
-
           <div className="empty-bookings">
+            <div className="empty-icon">⌂</div>
 
-            <div className="empty-icon">
-              ⌂
-            </div>
-
-            <h2>
-              Bạn chưa có đặt phòng nào
-            </h2>
+            <h2>Bạn chưa có đặt phòng nào</h2>
 
             <p>
-              Những đặt phòng của bạn sẽ xuất hiện
-              ở đây sau khi hoàn tất đặt phòng.
+              Những đặt phòng của bạn sẽ xuất hiện ở đây
+              sau khi hoàn tất đặt phòng.
             </p>
 
             <button
+              type="button"
               className="confirm-booking-button"
               onClick={onBack}
             >
               Khám phá chỗ nghỉ
             </button>
-
           </div>
-
         ) : (
-
-          /* =========================
-             BOOKING LIST
-          ========================= */
-
           <div className="bookings-list">
-
-            {bookings.map((booking) => {
-
+            {bookings.map((booking, index) => {
               const stayName =
-                booking.stay?.name ||
-                "The Pine House";
+                booking.stay?.name || "The Pine House";
 
               const stayLocation =
                 booking.stay?.area ||
@@ -194,41 +99,20 @@ function MyBookings({ onBack, currentUser }) {
               return (
                 <div
                   className="booking-history-card"
-                  key={booking.bookingCode}
+                  key={booking.bookingCode || `${booking.userId}-${index}`}
                 >
-
-                  {/* =========================
-                      BOOKING CODE
-                  ========================= */}
-
                   <div className="booking-history-top">
-
                     <div>
-
-                      <p className="eyebrow">
-                        MÃ ĐẶT PHÒNG
-                      </p>
-
+                      <p className="eyebrow">MÃ ĐẶT PHÒNG</p>
                       <h2>
-                        {booking.bookingCode}
+                        {booking.bookingCode || "Chưa có mã"}
                       </h2>
-
                     </div>
-
                   </div>
 
-                  {/* =========================
-                      MAIN BOOKING
-                  ========================= */}
-
                   <div className="booking-history-main">
-
-                    {/* ẢNH + CHỖ NGHỈ */}
-
                     <div className="booking-stay-section">
-
                       <div className="booking-stay-image">
-
                         {booking.stay?.image ? (
                           <img
                             src={booking.stay.image}
@@ -239,108 +123,54 @@ function MyBookings({ onBack, currentUser }) {
                             ⌂
                           </div>
                         )}
-
                       </div>
 
                       <div className="booking-stay-info">
-
-                        <p className="history-label">
-                          Chỗ nghỉ
-                        </p>
-
-                        <strong>
-                          {stayName}
-                        </strong>
-
-                        <span>
-                          📍 {stayLocation}
-                        </span>
-
+                        <p className="history-label">Chỗ nghỉ</p>
+                        <strong>{stayName}</strong>
+                        <span>📍 {stayLocation}</span>
                       </div>
-
                     </div>
 
-                    {/* PHÒNG */}
-
                     <div className="booking-info-item">
-
-                      <p className="history-label">
-                        Phòng
-                      </p>
-
+                      <p className="history-label">Phòng</p>
                       <strong>
-                        {booking.selectedRoom ||
-                          "Chưa có thông tin"}
+                        {booking.selectedRoom || "Chưa có thông tin"}
                       </strong>
-
                     </div>
 
-                    {/* THỜI GIAN */}
-
                     <div className="booking-info-item">
-
                       <p className="history-label">
                         Thời gian lưu trú
                       </p>
 
                       <strong>
-                        {formatDate(
-                          booking.checkIn
-                        )}{" "}
-                        →{" "}
-                        {formatDate(
-                          booking.checkOut
-                        )}
+                        {formatDate(booking.checkIn)} →{" "}
+                        {formatDate(booking.checkOut)}
                       </strong>
 
-                      <span>
-                        {booking.nights || 0} đêm
-                      </span>
-
+                      <span>{booking.nights || 0} đêm</span>
                     </div>
-
-                    {/* SỐ KHÁCH */}
 
                     <div className="booking-info-item">
-
-                      <p className="history-label">
-                        Số khách
-                      </p>
-
-                      <strong>
-                        {booking.guests || 0} khách
-                      </strong>
-
+                      <p className="history-label">Số khách</p>
+                      <strong>{booking.guests || 0} khách</strong>
                     </div>
-
-                    {/* TỔNG TIỀN */}
 
                     <div className="booking-price-section">
-
-                      <p className="history-label">
-                        Tổng tiền
-                      </p>
+                      <p className="history-label">Tổng tiền</p>
 
                       <strong className="history-price">
-                        {formatPrice(
-                          booking.totalPrice
-                        )}
+                        {formatPrice(booking.totalPrice)}
                       </strong>
-
                     </div>
-
                   </div>
-
                 </div>
               );
             })}
-
           </div>
-
         )}
-
       </main>
-
     </div>
   );
 }

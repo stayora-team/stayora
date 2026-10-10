@@ -57,12 +57,17 @@ function FloatingNavButton({
   );
 }
 
+
 function StayDetail({
   stay,
   onBack,
   currentUser,
   onAuthSuccess,
+  checkIn,
+  checkOut,
+  guests,
 }) {
+
   const [selectedRoom, setSelectedRoom] = useState(null);
   const [showBooking, setShowBooking] = useState(false);
 
@@ -123,6 +128,9 @@ function StayDetail({
         onBack={() => setShowBooking(false)}
         currentUser={currentUser}
         onAuthSuccess={onAuthSuccess}
+         checkIn={checkIn}
+        checkOut={checkOut}
+        guests={guests}
       />
       </>
     );
